@@ -10,10 +10,12 @@
   "author": "José Ramírez",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "5.12.1",
     "express": "4.19.2"
   },
   "devDependencies": {
     "@types/express": "4.17.21",
+    "prisma": "5.12.1",
     "ts-node": "10.9.2",
     "typescript": "5.4.4"
   }

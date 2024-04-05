@@ -5,6 +5,7 @@ const app = express()
 const port = 3000
 const globalPrefix = '/api'
 
+app.use(express.json())
 app.use(globalPrefix, router)
 
 app.listen(port, () => {

@@ -2,23 +2,7 @@ import { RepositoryResultDTO } from '../common/constants/dtos/repository-result.
 import { CreateUserDTO } from './dtos/create-user.dto'
 import { UserDTO } from './dtos/user.dto'
 
-let users: UserDTO[] = [
-  {
-    email: 'email1@gmail.com',
-    id: 1,
-    fullname: 'full name 1'
-  },
-  {
-    email: 'email2@gmail.com',
-    id: 2,
-    fullname: 'full name 2'
-  },
-  {
-    email: 'email3@gmail.com',
-    id: 3,
-    fullname: 'full name 3'
-  }
-]
+let users: UserDTO[] = []
 
 const createUser = async (user: CreateUserDTO): Promise<RepositoryResultDTO<null>> => {
   try {

@@ -4,7 +4,7 @@
   "description": "Example app using express and typescript",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --config ./test/jest.config.js",
     "test:watch": "npm run test -- --watch",
     "start": "cross-env NODE_ENV=production ts-node src/server.ts",
     "start:dev": "cross-env NODE_ENV=development nodemon"

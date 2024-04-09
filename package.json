@@ -6,7 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "npm run test -- --watch",
-    "start": "cross-env NODE_ENV=production ts-node src/index.ts",
+    "start": "cross-env NODE_ENV=production ts-node src/server.ts",
     "start:dev": "cross-env NODE_ENV=development nodemon"
   },
   "keywords": [],

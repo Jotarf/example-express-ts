@@ -1,9 +1,6 @@
-import joi from 'joi'
-
-const userIdSchema = joi.object({
-  userId: joi.number().required()
-})
+import { userSchema } from '../schemas/user.schema'
 
 export const userParamsValidation = {
-  userId: userIdSchema
+  userId: userSchema.userIdSchema,
+  email: userSchema.userEmailSchema
 }

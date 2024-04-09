@@ -1,15 +1,9 @@
-import joi from 'joi'
+import { userSchema } from '../schemas/user.schema'
 
-const userEmailSchema = joi.object({
-  email: joi.string().required().email()
-})
-
-const userFullnameSchema = joi.object({
-  fullname: joi.string().required()
-})
-
-const userSchema = userEmailSchema.concat(userFullnameSchema)
+const userSchemaToValidate = userSchema.userEmailSchema.concat(
+  userSchema.userFullnameSchema
+)
 
 export const userSchemaValidation = {
-  user: userSchema
+  user: userSchemaToValidate
 }

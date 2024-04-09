@@ -1,5 +1,4 @@
 import Router from 'express'
-//import { HTTP_STATUS } from '../common/constants/http-codes.constants'
 import { validateParamsMiddleware } from './middlewares/validate-params.middleware'
 import { validateUserMiddleware } from './middlewares/validate-user.middleware'
 import { userController } from './user.controller'

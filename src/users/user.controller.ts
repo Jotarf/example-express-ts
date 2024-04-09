@@ -3,21 +3,24 @@ import { userService } from './user.service'
 import { UserDTO } from './dtos/user.dto'
 import { RepositoryResultDTO } from '../common/constants/dtos/repository-result.dto'
 import { CreateUserDTO } from './dtos/create-user.dto'
+import { HTTP_STATUS } from '../common/constants/http-codes.constants'
 
 const createUser = async (req: Request, res: Response) => {
   const user: CreateUserDTO = req.body.user
 
   const result: RepositoryResultDTO<null> = await userService.createUser(user)
 
-  if (result.error) return res.status(400).json({ error: result.message })
-  return res.status(200).send()
+  if (result.error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: result.message })
+  return res.status(HTTP_STATUS.CREATED).send()
 }
 
 const getAllUsers = async (_: Request, res: Response) => {
   const result: RepositoryResultDTO<UserDTO[]> = await userService.getAllUsers()
 
-  if (result.error) return res.status(400).json({ error: result.message })
-  return res.status(200).json(result.data)
+  if (result.error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: result.message })
+  return res.status(HTTP_STATUS.OK).json(result.data)
 }
 
 const getUserById = async (req: Request, res: Response) => {
@@ -27,8 +30,9 @@ const getUserById = async (req: Request, res: Response) => {
     userId
   )
 
-  if (result.error) return res.status(400).json({ error: result.message })
-  return res.status(200).json(result.data)
+  if (result.error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: result.message })
+  return res.status(HTTP_STATUS.OK).json(result.data)
 }
 
 const getUserByEmail = async (req: Request, res: Response) => {
@@ -38,8 +42,9 @@ const getUserByEmail = async (req: Request, res: Response) => {
     email
   )
 
-  if (result.error) return res.status(400).json({ error: result.message })
-  return res.status(200).json(result.data)
+  if (result.error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: result.message })
+  return res.status(HTTP_STATUS.OK).json(result.data)
 }
 
 const updateUser = async (req: Request, res: Response) => {
@@ -48,8 +53,9 @@ const updateUser = async (req: Request, res: Response) => {
 
   const result: RepositoryResultDTO<null> = await userService.updateUser(userId, user)
 
-  if (result.error) return res.status(400).json({ error: result.message })
-  return res.status(200).send()
+  if (result.error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: result.message })
+  return res.status(HTTP_STATUS.OK).send()
 }
 
 const deleteUser = async (req: Request, res: Response) => {
@@ -57,8 +63,9 @@ const deleteUser = async (req: Request, res: Response) => {
 
   const result: RepositoryResultDTO<null> = await userService.deleteUser(userId)
 
-  if (result.error) return res.status(400).json({ error: result.message })
-  return res.status(200).send()
+  if (result.error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: result.message })
+  return res.status(HTTP_STATUS.OK).send()
 }
 
 export const userController = {

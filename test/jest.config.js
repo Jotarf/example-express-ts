@@ -2,7 +2,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  silent: true,
+  silent: false,
   detectOpenHandles: true,
   verbose: true,
   rootDir: '.',

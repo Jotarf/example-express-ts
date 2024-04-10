@@ -5,5 +5,5 @@ const userSchemaToValidate = userSchema.userEmailSchema.concat(
 )
 
 export const userSchemaValidation = {
-  user: userSchemaToValidate
+  user: userSchemaToValidate.required()
 }

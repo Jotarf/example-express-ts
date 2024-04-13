@@ -7,18 +7,9 @@ export function validateParamsMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  for (let param in req.params) {
-    const objectParam = {
-      [param]: req.params[param]
-    }
+  const { error } = userParamsValidation.validate(req.params)
 
-    const { error } =
-      userParamsValidation[param as keyof typeof userParamsValidation].validate(
-        objectParam
-      )
-
-    if (error)
-      return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: error.details[0].message })
-  }
+  if (error)
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({ error: error.details[0].message })
   next()
 }

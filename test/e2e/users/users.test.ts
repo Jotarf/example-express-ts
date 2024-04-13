@@ -1,4 +1,3 @@
-import { server } from '../../../src/server'
 import { HTTP_STATUS } from '../../../src/common/constants/http-codes.constants'
 import { CreateUserDTO } from '../../../src/users/dtos/create-user.dto'
 import { userService } from '../../../src/users/user.service'
@@ -32,8 +31,4 @@ describe('Create user', () => {
       expect.arrayContaining([expect.objectContaining(newUser)])
     )
   })
-})
-
-afterAll(() => {
-  server.close()
 })

@@ -173,3 +173,25 @@ describe('Delete user', () => {
     expect(response.body.error).toBe('User not found')
   })
 })
+
+describe('Update user', () => {
+  test('Should update user email', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToUpdate: UserDTO = structuredClone(users[0])
+    userToUpdate.email = 'updated@email.com'
+
+    const response = await api
+      .put(`/api/users/${userToUpdate.id}`)
+      .send(userToUpdate)
+      .expect(HTTP_STATUS.OK)
+
+    const usersAfterUpdate: UserDTO[] = (await getAllUsers()).body
+
+    expect(usersAfterUpdate).toHaveLength(users.length)
+    expect(usersAfterUpdate).toEqual(
+      expect.arrayContaining([expect.objectContaining(userToUpdate)])
+    )
+    expect(usersAfterUpdate).not.toEqual(users)
+    expect(response.body).toEqual({})
+  })
+})

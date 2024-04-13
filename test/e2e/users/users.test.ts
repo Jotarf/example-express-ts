@@ -259,4 +259,17 @@ describe('Update user', () => {
 
     expect(response.body.error).toEqual('"email" must be a valid email')
   })
+
+  test('Should throw error if user does not exist', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToUpdate: UserDTO = structuredClone(users[0])
+    const nonExistentUserId = users.length + 2
+
+    const response = await api
+      .put(`/api/users/${nonExistentUserId}`)
+      .send(userToUpdate)
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toBe('User not found')
+  })
 })

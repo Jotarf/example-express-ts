@@ -128,7 +128,7 @@ describe('Get specific user', () => {
     expect(response.body.error).toBe('"email" must be a valid email')
   })
 
-  test('Should return null if user does not exist', async () => {
+  test('Should return null if user id does not exist', async () => {
     const userId = (await getAllUsers()).body.length
     const response = await api.get(`/api/users/id/${userId + 2}`).expect(HTTP_STATUS.OK)
 

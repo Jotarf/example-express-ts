@@ -194,4 +194,24 @@ describe('Update user', () => {
     expect(usersAfterUpdate).not.toEqual(users)
     expect(response.body).toEqual({})
   })
+
+  test('Should update user fullname', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToUpdate: UserDTO = structuredClone(users[0])
+    userToUpdate.fullname = 'Updated Name'
+
+    const response = await api
+      .put(`/api/users/${userToUpdate.id}`)
+      .send(userToUpdate)
+      .expect(HTTP_STATUS.OK)
+
+    const usersAfterUpdate: UserDTO[] = (await getAllUsers()).body
+
+    expect(usersAfterUpdate).toHaveLength(users.length)
+    expect(usersAfterUpdate).toEqual(
+      expect.arrayContaining([expect.objectContaining(userToUpdate)])
+    )
+    expect(usersAfterUpdate).not.toEqual(users)
+    expect(response.body).toEqual({})
+  })
 })

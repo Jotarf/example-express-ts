@@ -1,11 +1,12 @@
 import Router from 'express'
 import { validateParamsMiddleware } from './middlewares/validate-params.middleware'
-import { validateUserMiddleware } from './middlewares/validate-user.middleware'
+import { validateCreateUserMiddleware } from './middlewares/validate-create-user.middleware'
 import { userController } from './user.controller'
+import { validateUserMiddleware } from './middlewares/validate-user.middleware'
 
 export const userRouter = Router()
 
-userRouter.post('/', validateUserMiddleware, userController.createUser)
+userRouter.post('/', validateCreateUserMiddleware, userController.createUser)
 userRouter.get('/', userController.getAllUsers)
 userRouter.get('/id/:userId', validateParamsMiddleware, userController.getUserById)
 userRouter.get('/email/:email', validateParamsMiddleware, userController.getUserByEmail)

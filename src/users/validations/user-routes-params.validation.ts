@@ -1,6 +1,7 @@
 import { userSchema } from '../schemas/user.schema'
+import joi from 'joi'
 
-export const userParamsValidation = {
-  userId: userSchema.userIdSchema,
-  email: userSchema.userEmailSchema
-}
+export const userParamsValidation = joi.object({
+  userId: userSchema.idField.optional(),
+  email: userSchema.emailField.optional()
+})

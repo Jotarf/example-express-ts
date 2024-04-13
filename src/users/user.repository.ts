@@ -7,7 +7,7 @@ let users: UserDTO[] = []
 const createUser = async (user: CreateUserDTO): Promise<RepositoryResultDTO<null>> => {
   try {
     const result: RepositoryResultDTO<null> = await new Promise((resolve, _) => {
-      users.push({ ...user, id: Math.floor(Math.random() * 100) })
+      users.push({ ...user, id: users.length + 1 })
       resolve({ error: false })
     })
 

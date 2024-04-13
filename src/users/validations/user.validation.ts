@@ -1,9 +1,19 @@
+import { SchemaValidation } from '../../common/types/schema-validation.type'
+import { CreateUserDTO } from '../dtos/create-user.dto'
+import { UserDTO } from '../dtos/user.dto'
 import { userSchema } from '../schemas/user.schema'
+import joi from 'joi'
 
-const userSchemaToValidate = userSchema.userEmailSchema.concat(
-  userSchema.userFullnameSchema
-)
-
-export const userSchemaValidation = {
-  user: userSchemaToValidate
+const createUserSchema: SchemaValidation<CreateUserDTO> = {
+  fullname: userSchema.fullnameField,
+  email: userSchema.emailField
 }
+
+const updateUserSchema: SchemaValidation<UserDTO> = {
+  fullname: userSchema.fullnameField,
+  email: userSchema.emailField,
+  id: userSchema.idField
+}
+
+export const createUserSchemaValidation = joi.object(createUserSchema)
+export const updateUserSchemaValidation = joi.object(updateUserSchema)

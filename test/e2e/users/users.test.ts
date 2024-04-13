@@ -145,6 +145,8 @@ describe('Delete user', () => {
   })
 
   test('Should not delete user if id is invalid', async () => {
-    await api.delete('/api/users/abc').expect(HTTP_STATUS.BAD_REQUEST)
+    const response = await api.delete('/api/users/abc').expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toBe('"userId" must be a number')
   })
 })

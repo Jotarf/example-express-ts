@@ -80,3 +80,13 @@ describe('Create user', () => {
     expect(response.body.error).toBe('"email" is not allowed to be empty')
   })
 })
+
+describe('Get all users', () => {
+  test('Should get all users', async () => {
+    const usersWithId = usersToCreate.map((user, index) => ({ ...user, id: index + 1 }))
+    const response = await api.get('/api/users').expect(HTTP_STATUS.OK)
+
+    expect(response.body).toHaveLength(usersToCreate.length)
+    expect(response.body).toEqual(usersWithId)
+  })
+})

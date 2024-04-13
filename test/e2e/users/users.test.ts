@@ -143,4 +143,8 @@ describe('Delete user', () => {
       users.filter((user) => user.id !== userToDelete.id)
     )
   })
+
+  test('Should not delete user if id is invalid', async () => {
+    await api.delete('/api/users/abc').expect(HTTP_STATUS.BAD_REQUEST)
+  })
 })

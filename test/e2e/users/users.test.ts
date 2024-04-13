@@ -31,4 +31,20 @@ describe('Create user', () => {
       expect.arrayContaining([expect.objectContaining(newUser)])
     )
   })
+
+  test('Should not create user with invalid email', async () => {
+    const newUser: CreateUserDTO = {
+      fullname: 'Patrick Davis',
+      email: 'patrickgmail.com'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send({ user: newUser })
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    const usersResponse = await getAllUsers()
+    expect(usersResponse.body).toHaveLength(usersToCreate.length)
+    expect(response.body.error).toBe('"email" must be a valid email')
+  })
 })

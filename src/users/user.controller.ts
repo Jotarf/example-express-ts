@@ -52,7 +52,12 @@ const getUserByEmail = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   const userId: number = Number(req.params.userId)
-  const user: UserDTO = req.body.user
+
+  const user: UserDTO = {
+    fullname: req.body.fullname,
+    email: req.body.email,
+    id: req.body.id
+  }
 
   const result: RepositoryResultDTO<null> = await userService.updateUser(userId, user)
 

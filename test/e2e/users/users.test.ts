@@ -134,6 +134,13 @@ describe('Get specific user', () => {
 
     expect(response.body).toBe(null)
   })
+
+  test('Should return null if user email does not exist', async () => {
+    const userEmail = 'abcd@email.com'
+    const response = await api.get(`/api/users/email/${userEmail}`).expect(HTTP_STATUS.OK)
+
+    expect(response.body).toBe(null)
+  })
 })
 
 describe('Delete user', () => {

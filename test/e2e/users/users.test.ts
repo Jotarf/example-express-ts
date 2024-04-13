@@ -47,4 +47,20 @@ describe('Create user', () => {
     expect(usersResponse.body).toHaveLength(usersToCreate.length)
     expect(response.body.error).toBe('"email" must be a valid email')
   })
+
+  test('Should not create user with empty fullname', async () => {
+    const newUser: CreateUserDTO = {
+      fullname: '',
+      email: 'patrick@gmail.com'
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send({ user: newUser })
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    const usersResponse = await getAllUsers()
+    expect(usersResponse.body).toHaveLength(usersToCreate.length)
+    expect(response.body.error).toBe('"fullname" is not allowed to be empty')
+  })
 })

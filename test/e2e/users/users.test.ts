@@ -149,4 +149,13 @@ describe('Delete user', () => {
 
     expect(response.body.error).toBe('"userId" must be a number')
   })
+
+  test('Should throw error if user does not exist', async () => {
+    const userId = (await getAllUsers()).body.length
+    const response = await api
+      .delete(`/api/users/${userId + 2}`)
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toBe('User not found')
+  })
 })

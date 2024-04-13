@@ -110,4 +110,9 @@ describe('Get specific user', () => {
 
     expect(response.body).toEqual({ ...usersToCreate[0], id: userId })
   })
+
+  test('Should throw error if user id is NaN', async () => {
+    const response = await api.get('/api/users/id/abc').expect(HTTP_STATUS.BAD_REQUEST)
+    expect(response.body.error).toBe('"userId" must be a number')
+  })
 })

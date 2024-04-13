@@ -214,4 +214,10 @@ describe('Update user', () => {
     expect(usersAfterUpdate).not.toEqual(users)
     expect(response.body).toEqual({})
   })
+
+  test('Should not update user if id is invalid', async () => {
+    const response = await api.put('/api/users/abc').expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toBe('"userId" must be a number')
+  })
 })

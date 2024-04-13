@@ -115,4 +115,11 @@ describe('Get specific user', () => {
     const response = await api.get('/api/users/id/abc').expect(HTTP_STATUS.BAD_REQUEST)
     expect(response.body.error).toBe('"userId" must be a number')
   })
+
+  test('Should get specific user by email', async () => {
+    const userEmail = usersToCreate[0].email
+    const response = await api.get(`/api/users/email/${userEmail}`).expect(HTTP_STATUS.OK)
+
+    expect(response.body).toEqual({ ...usersToCreate[0], id: 1 })
+  })
 })

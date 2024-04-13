@@ -102,3 +102,12 @@ describe('Get all users', () => {
     expect(response.body).toEqual([])
   })
 })
+
+describe('Get specific user', () => {
+  test('Should get specific user by id', async () => {
+    const userId = 1
+    const response = await api.get(`/api/users/id/${userId}`).expect(HTTP_STATUS.OK)
+
+    expect(response.body).toEqual({ ...usersToCreate[0], id: userId })
+  })
+})

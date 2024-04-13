@@ -6,7 +6,10 @@ import { CreateUserDTO } from './dtos/create-user.dto'
 import { HTTP_STATUS } from '../common/constants/http-codes.constants'
 
 const createUser = async (req: Request, res: Response) => {
-  const user: CreateUserDTO = req.body.user
+  const user: CreateUserDTO = {
+    fullname: req.body.fullname,
+    email: req.body.email
+  }
 
   const result: RepositoryResultDTO<null> = await userService.createUser(user)
 

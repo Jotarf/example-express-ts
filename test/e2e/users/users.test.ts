@@ -89,4 +89,16 @@ describe('Get all users', () => {
     expect(response.body).toHaveLength(usersToCreate.length)
     expect(response.body).toEqual(usersWithId)
   })
+
+  test('Should get empty array if there are no users', async () => {
+    const usersToDelete: UserDTO[] = (await getAllUsers()).body
+
+    for (const user of usersToDelete) {
+      await userService.deleteUser(user.id)
+    }
+
+    const response = await api.get('/api/users').expect(HTTP_STATUS.OK)
+    expect(response.body).toHaveLength(0)
+    expect(response.body).toEqual([])
+  })
 })

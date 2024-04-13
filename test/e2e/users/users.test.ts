@@ -122,4 +122,9 @@ describe('Get specific user', () => {
 
     expect(response.body).toEqual({ ...usersToCreate[0], id: 1 })
   })
+
+  test('Should throw error if email is not valid', async () => {
+    const response = await api.get('/api/users/email/abc').expect(HTTP_STATUS.BAD_REQUEST)
+    expect(response.body.error).toBe('"email" must be a valid email')
+  })
 })

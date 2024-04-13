@@ -128,3 +128,19 @@ describe('Get specific user', () => {
     expect(response.body.error).toBe('"email" must be a valid email')
   })
 })
+
+describe('Delete user', () => {
+  test('Should delete user', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToDelete: UserDTO = users[0]
+
+    await api.delete(`/api/users/${userToDelete.id}`).expect(HTTP_STATUS.OK)
+
+    const usersAfterDeletion: UserDTO[] = (await getAllUsers()).body
+
+    expect(usersAfterDeletion).toHaveLength(users.length - 1)
+    expect(usersAfterDeletion).toEqual(
+      users.filter((user) => user.id !== userToDelete.id)
+    )
+  })
+})

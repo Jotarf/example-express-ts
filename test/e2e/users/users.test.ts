@@ -23,7 +23,7 @@ describe('Create user', () => {
       email: 'patrick@gmail.com'
     }
 
-    await api.post('/api/users').send({ user: newUser }).expect(HTTP_STATUS.CREATED)
+    await api.post('/api/users').send(newUser).expect(HTTP_STATUS.CREATED)
 
     const response = await getAllUsers()
     expect(response.body).toHaveLength(usersToCreate.length + 1)
@@ -40,7 +40,7 @@ describe('Create user', () => {
 
     const response = await api
       .post('/api/users')
-      .send({ user: newUser })
+      .send(newUser)
       .expect(HTTP_STATUS.BAD_REQUEST)
 
     const usersResponse = await getAllUsers()
@@ -56,7 +56,7 @@ describe('Create user', () => {
 
     const response = await api
       .post('/api/users')
-      .send({ user: newUser })
+      .send(newUser)
       .expect(HTTP_STATUS.BAD_REQUEST)
 
     const usersResponse = await getAllUsers()
@@ -72,7 +72,7 @@ describe('Create user', () => {
 
     const response = await api
       .post('/api/users')
-      .send({ user: newUser })
+      .send(newUser)
       .expect(HTTP_STATUS.BAD_REQUEST)
 
     const usersResponse = await getAllUsers()

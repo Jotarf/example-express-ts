@@ -233,4 +233,17 @@ describe('Update user', () => {
 
     expect(response.body.error).toEqual('"email" is not allowed to be empty')
   })
+
+  test('Should not update user if fullname is empty', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToUpdate: UserDTO = structuredClone(users[0])
+    userToUpdate.fullname = ''
+
+    const response = await api
+      .put(`/api/users/${userToUpdate.id}`)
+      .send(userToUpdate)
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toEqual('"fullname" is not allowed to be empty')
+  })
 })

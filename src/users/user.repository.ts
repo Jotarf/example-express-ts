@@ -28,12 +28,10 @@ const getAllUsers = async (): Promise<RepositoryResultDTO<UserDTO[]>> => {
   try {
     const users: UserDTO[] = await prismaClient.user.findMany()
 
-    const result: RepositoryResultDTO<UserDTO[]> = await new Promise((resolve, _) => {
-      resolve({
-        error: false,
-        data: users
-      })
-    })
+    const result: RepositoryResultDTO<UserDTO[]> = {
+      error: false,
+      data: users
+    }
 
     return result
   } catch (error) {

@@ -9,10 +9,14 @@ let users: UserDTO[] = []
 
 const createUser = async (user: CreateUserDTO): Promise<RepositoryResultDTO<null>> => {
   try {
-    const result: RepositoryResultDTO<null> = await new Promise((resolve, _) => {
-      users.push({ ...user, id: users.length + 1 })
-      resolve({ error: false })
+    await prismaClient.user.create({
+      data: {
+        email: user.email,
+        fullname: user.fullname
+      }
     })
+
+    const result: RepositoryResultDTO<null> = { error: false }
 
     return result
   } catch (error) {

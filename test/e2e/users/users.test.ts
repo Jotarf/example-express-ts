@@ -1,15 +1,15 @@
 import { HTTP_STATUS } from '../../../src/common/constants/http-codes.constants'
 import { CreateUserDTO } from '../../../src/users/dtos/create-user.dto'
 import { userService } from '../../../src/users/user.service'
-import { api, usersToCreate, getAllUsers } from './users.util'
+import { api, usersToCreate, getAllUsers, prismaClient } from './users.util'
 import { UserDTO } from '../../../src/users/dtos/user.dto'
 
 beforeEach(async () => {
   const users: UserDTO[] = (await getAllUsers()).body
 
-  for (const user of users) {
-    await userService.deleteUser(user.id)
-  }
+  for (const user of users) await userService.deleteUser(user.id)
+
+  await prismaClient.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`
 
   for (const user of usersToCreate) {
     await userService.createUser(user)
@@ -170,7 +170,7 @@ describe('Delete user', () => {
       .delete(`/api/users/${userId + 2}`)
       .expect(HTTP_STATUS.BAD_REQUEST)
 
-    expect(response.body.error).toBe('User not found')
+    expect(response.body.error).toBe('Record to delete does not exist.')
   })
 })
 
@@ -270,6 +270,13 @@ describe('Update user', () => {
       .send(userToUpdate)
       .expect(HTTP_STATUS.BAD_REQUEST)
 
-    expect(response.body.error).toBe('User not found')
+    expect(response.body.error).toBe('Record to update not found.')
   })
+})
+
+afterAll(async () => {
+  const users: UserDTO[] = (await getAllUsers()).body
+
+  for (const user of users) await userService.deleteUser(user.id)
+  await prismaClient.$disconnect()
 })

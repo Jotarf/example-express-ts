@@ -1,8 +1,10 @@
 import { app } from '../../../src/app'
 import supertest from 'supertest'
 import { CreateUserDTO } from '../../../src/users/dtos/create-user.dto'
+import { getPrismaClient } from '../../../src/common/prisma/prisma.config'
 
 export const api = supertest(app)
+export const prismaClient = getPrismaClient()
 
 export const usersToCreate: CreateUserDTO[] = [
   {

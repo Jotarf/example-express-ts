@@ -6,8 +6,6 @@ import { UserDTO } from './dtos/user.dto'
 
 const prismaClient = getPrismaClient()
 
-let users: UserDTO[] = []
-
 const createUser = async (user: CreateUserDTO): Promise<RepositoryResultDTO<null>> => {
   try {
     await prismaClient.user.create({
@@ -116,24 +114,28 @@ const updateUser = async (
 
 const deleteUser = async (userId: number): Promise<RepositoryResultDTO<null>> => {
   try {
-    const result: RepositoryResultDTO<null> = await new Promise((resolve, reject) => {
-      const user: UserDTO | undefined = users.find((user) => user.id === userId)
-
-      if (!user) reject({ error: true, message: 'User not found' })
-
-      users = users.filter((user) => user.id !== userId)
-
-      resolve({
-        error: false
-      })
+    await prismaClient.user.delete({
+      where: {
+        id: userId
+      }
     })
+
+    const result: RepositoryResultDTO<null> = {
+      error: false
+    }
 
     return result
   } catch (error: unknown) {
-    return {
-      error: true,
-      message: (error as RepositoryResultDTO<null>)?.message ?? "User couldn't be deleted"
-    }
+    if (error instanceof PrismaClientKnownRequestError)
+      return {
+        error: true,
+        message: error?.meta?.cause as string
+      }
+    else
+      return {
+        error: true,
+        message: "User couldn't be deleted"
+      }
   }
 }
 

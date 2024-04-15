@@ -1,6 +1,9 @@
 import { RepositoryResultDTO } from '../common/constants/dtos/repository-result.dto'
+import { getPrismaClient } from '../common/prisma/prisma.config'
 import { CreateUserDTO } from './dtos/create-user.dto'
 import { UserDTO } from './dtos/user.dto'
+
+const prismaClient = getPrismaClient()
 
 let users: UserDTO[] = []
 
@@ -19,6 +22,8 @@ const createUser = async (user: CreateUserDTO): Promise<RepositoryResultDTO<null
 
 const getAllUsers = async (): Promise<RepositoryResultDTO<UserDTO[]>> => {
   try {
+    const users: UserDTO[] = await prismaClient.user.findMany()
+
     const result: RepositoryResultDTO<UserDTO[]> = await new Promise((resolve, _) => {
       resolve({
         error: false,
@@ -28,7 +33,7 @@ const getAllUsers = async (): Promise<RepositoryResultDTO<UserDTO[]>> => {
 
     return result
   } catch (error) {
-    return { error: true, message: 'Error finding user' }
+    return { error: true, message: 'Error finding users' }
   }
 }
 

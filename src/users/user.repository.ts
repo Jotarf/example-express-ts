@@ -43,19 +43,20 @@ const getUserById = async (
   userId: number
 ): Promise<RepositoryResultDTO<UserDTO | null>> => {
   try {
-    const result: RepositoryResultDTO<UserDTO | null> = await new Promise(
-      (resolve, _) => {
-        const user: UserDTO | undefined = users.find((user) => user.id === userId)
-        resolve({
-          error: false,
-          data: user ?? null
-        })
+    const user: UserDTO | null = await prismaClient.user.findUnique({
+      where: {
+        id: userId
       }
-    )
+    })
+
+    const result: RepositoryResultDTO<UserDTO | null> = {
+      error: false,
+      data: user ?? null
+    }
 
     return result
   } catch (error) {
-    return { error: true, message: 'Error finding user' }
+    return { error: true, message: 'Error finding user by id' }
   }
 }
 

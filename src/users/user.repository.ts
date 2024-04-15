@@ -64,19 +64,20 @@ const getUserByEmail = async (
   email: string
 ): Promise<RepositoryResultDTO<UserDTO | null>> => {
   try {
-    const result: RepositoryResultDTO<UserDTO | null> = await new Promise(
-      (resolve, _) => {
-        const user: UserDTO | undefined = users.find((user) => user.email === email)
-        resolve({
-          error: false,
-          data: user ?? null
-        })
+    const user: UserDTO | null = await prismaClient.user.findUnique({
+      where: {
+        email: email
       }
-    )
+    })
+
+    const result: RepositoryResultDTO<UserDTO | null> = {
+      error: false,
+      data: user ?? null
+    }
 
     return result
   } catch (error) {
-    return { error: true, message: 'Error finding user' }
+    return { error: true, message: 'Error finding user by email' }
   }
 }
 

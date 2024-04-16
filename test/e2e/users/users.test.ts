@@ -20,22 +20,26 @@ describe('Create user', () => {
   test('Should create valid user', async () => {
     const newUser: CreateUserDTO = {
       fullname: 'Patrick Davis',
-      email: 'patrick@gmail.com'
+      email: 'patrick@gmail.com',
+      password: 'password126'
     }
 
     await api.post('/api/users').send(newUser).expect(HTTP_STATUS.CREATED)
 
+    const { password, ...userWithoutPassword } = newUser
+
     const response = await getAllUsers()
     expect(response.body).toHaveLength(usersToCreate.length + 1)
     expect(response.body).toEqual(
-      expect.arrayContaining([expect.objectContaining(newUser)])
+      expect.arrayContaining([expect.objectContaining(userWithoutPassword)])
     )
   })
 
   test('Should not create user with invalid email', async () => {
     const newUser: CreateUserDTO = {
       fullname: 'Patrick Davis',
-      email: 'patrickgmail.com'
+      email: 'patrickgmail.com',
+      password: 'password126'
     }
 
     const response = await api
@@ -51,7 +55,8 @@ describe('Create user', () => {
   test('Should not create user with empty fullname', async () => {
     const newUser: CreateUserDTO = {
       fullname: '',
-      email: 'patrick@gmail.com'
+      email: 'patrick@gmail.com',
+      password: 'password126'
     }
 
     const response = await api
@@ -67,7 +72,8 @@ describe('Create user', () => {
   test('Should not create user with empty email', async () => {
     const newUser: CreateUserDTO = {
       fullname: 'Patrick Davis',
-      email: ''
+      email: '',
+      password: 'password126'
     }
 
     const response = await api
@@ -79,11 +85,32 @@ describe('Create user', () => {
     expect(usersResponse.body).toHaveLength(usersToCreate.length)
     expect(response.body.error).toBe('"email" is not allowed to be empty')
   })
+
+  test('Should not create user with empty password', async () => {
+    const newUser: CreateUserDTO = {
+      fullname: 'Patrick Davis',
+      email: 'patrick@gmail.com',
+      password: ''
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    const usersResponse = await getAllUsers()
+    expect(usersResponse.body).toHaveLength(usersToCreate.length)
+    expect(response.body.error).toBe('"password" is not allowed to be empty')
+  })
 })
 
 describe('Get all users', () => {
   test('Should get all users', async () => {
-    const usersWithId = usersToCreate.map((user, index) => ({ ...user, id: index + 1 }))
+    const usersWithId = usersToCreate.map((user, index) => ({
+      id: index + 1,
+      fullname: user.fullname,
+      email: user.email
+    }))
     const response = await api.get('/api/users').expect(HTTP_STATUS.OK)
 
     expect(response.body).toHaveLength(usersToCreate.length)
@@ -108,7 +135,13 @@ describe('Get specific user', () => {
     const userId = 1
     const response = await api.get(`/api/users/id/${userId}`).expect(HTTP_STATUS.OK)
 
-    expect(response.body).toEqual({ ...usersToCreate[0], id: userId })
+    const user = {
+      id: userId,
+      fullname: usersToCreate[0].fullname,
+      email: usersToCreate[0].email
+    }
+
+    expect(response.body).toEqual(user)
   })
 
   test('Should throw error if user id is NaN', async () => {
@@ -120,7 +153,13 @@ describe('Get specific user', () => {
     const userEmail = usersToCreate[0].email
     const response = await api.get(`/api/users/email/${userEmail}`).expect(HTTP_STATUS.OK)
 
-    expect(response.body).toEqual({ ...usersToCreate[0], id: 1 })
+    const user = {
+      id: 1,
+      fullname: usersToCreate[0].fullname,
+      email: userEmail
+    }
+
+    expect(response.body).toEqual(user)
   })
 
   test('Should throw error if email is not valid', async () => {
@@ -177,7 +216,11 @@ describe('Delete user', () => {
 describe('Update user', () => {
   test('Should update user email', async () => {
     const users: UserDTO[] = (await getAllUsers()).body
-    const userToUpdate: UserDTO = structuredClone(users[0])
+    const userToUpdate: UserDTO = {
+      id: users[0].id,
+      fullname: users[0].fullname,
+      email: users[0].email
+    }
     userToUpdate.email = 'updated@email.com'
 
     const response = await api
@@ -197,7 +240,12 @@ describe('Update user', () => {
 
   test('Should update user fullname', async () => {
     const users: UserDTO[] = (await getAllUsers()).body
-    const userToUpdate: UserDTO = structuredClone(users[0])
+    const userToUpdate: UserDTO = {
+      id: users[0].id,
+      fullname: users[0].fullname,
+      email: users[0].email
+    }
+
     userToUpdate.fullname = 'Updated Name'
 
     const response = await api

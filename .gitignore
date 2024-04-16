@@ -89,3 +89,4 @@ web_modules/
 .webpack/
 
 .vscode/*
+/dist

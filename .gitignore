@@ -89,5 +89,4 @@ web_modules/
 .webpack/
 
 .vscode/*
-
-/prisma/migrations/
+/dist

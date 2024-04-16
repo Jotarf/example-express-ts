@@ -13,8 +13,7 @@ const createUserSchema: SchemaValidation<CreateUserDTO> = {
 const updateUserSchema: SchemaValidation<UserDTO> = {
   fullname: userSchema.fullnameField,
   email: userSchema.emailField,
-  id: userSchema.idField,
-  password: userSchema.passwordField
+  id: userSchema.idField
 }
 
 export const createUserSchemaValidation = joi.object(createUserSchema)

@@ -57,8 +57,7 @@ const updateUser = async (req: Request, res: Response) => {
   const user: UserDTO = {
     fullname: req.body.fullname,
     email: req.body.email,
-    id: req.body.id,
-    password: req.body.password
+    id: req.body.id
   }
 
   const result: RepositoryResultDTO<null> = await userService.updateUser(userId, user)

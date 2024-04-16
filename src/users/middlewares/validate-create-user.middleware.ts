@@ -10,7 +10,8 @@ export function validateCreateUserMiddleware(
 ) {
   const user: CreateUserDTO = {
     fullname: req.body.fullname,
-    email: req.body.email
+    email: req.body.email,
+    password: req.body.password
   }
 
   const { error } = createUserSchemaValidation.validate(user)

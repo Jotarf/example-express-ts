@@ -7,7 +7,8 @@ export function validateUserMiddleware(req: Request, res: Response, next: NextFu
   const user: UserDTO = {
     fullname: req.body.fullname,
     email: req.body.email,
-    id: req.body.id
+    id: req.body.id,
+    password: req.body.password
   }
 
   const { error } = updateUserSchemaValidation.validate(user)

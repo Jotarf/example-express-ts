@@ -9,15 +9,18 @@ export const prismaClient = getPrismaClient()
 export const usersToCreate: CreateUserDTO[] = [
   {
     fullname: 'John Dulp',
-    email: 'john@gmail.com'
+    email: 'john@gmail.com',
+    password: 'password123'
   },
   {
     fullname: 'Matt Murdock',
-    email: 'matt@gmail.com'
+    email: 'matt@gmail.com',
+    password: 'password124'
   },
   {
     fullname: 'Harry Jones',
-    email: 'harry@gmail.com'
+    email: 'harry@gmail.com',
+    password: 'password125'
   }
 ]
 

@@ -37,4 +37,4 @@ jobs:
         run: npx prisma migrate deploy
 
       - name: Run e2e tests
-        run: npm run test auth.test
+        run: npm run test

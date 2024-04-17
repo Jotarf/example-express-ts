@@ -27,4 +27,9 @@ userRouter.put(
   validateUserMiddleware,
   userController.updateUser
 )
-userRouter.delete('/:userId', validateParamsMiddleware, userController.deleteUser)
+userRouter.delete(
+  '/:userId',
+  validateParamsMiddleware,
+  validateJWTMiddleware,
+  userController.deleteUser
+)

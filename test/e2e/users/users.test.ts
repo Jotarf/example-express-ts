@@ -258,8 +258,15 @@ describe('Delete user', () => {
   test('Should delete user', async () => {
     const users: UserDTO[] = (await getAllUsers()).body
     const userToDelete: UserDTO = users[0]
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
 
-    await api.delete(`/api/users/${userToDelete.id}`).expect(HTTP_STATUS.OK)
+    await api
+      .delete(`/api/users/${userToDelete.id}`)
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
 
     const usersAfterDeletion: UserDTO[] = (await getAllUsers()).body
 
@@ -277,11 +284,27 @@ describe('Delete user', () => {
 
   test('Should throw error if user does not exist', async () => {
     const userId = (await getAllUsers()).body.length
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
     const response = await api
       .delete(`/api/users/${userId + 2}`)
+      .set('Cookie', [`jwt=${jwtToken}`])
       .expect(HTTP_STATUS.BAD_REQUEST)
 
     expect(response.body.error).toBe('Record to delete does not exist.')
+  })
+
+  test('Should throw error if jwt cookie is not sent when deleting user', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToDelete: UserDTO = users[0]
+
+    const response = await api
+      .delete(`/api/users/${userToDelete.id}`)
+      .expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.body.error).toBe('Token is missing')
   })
 })
 

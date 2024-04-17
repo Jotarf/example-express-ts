@@ -156,6 +156,15 @@ describe('Logout user', () => {
 
     expect(response.headers['set-cookie']).not.toBeDefined()
   })
+
+  test('Should not logout user without valid', async () => {
+    const response = await api
+      .post('/api/auth/logout')
+      .set('Cookie', ['jwt=thisisaninvalidtoken'])
+      .expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.headers['set-cookie']).not.toBeDefined()
+  })
 })
 
 afterAll(async () => {

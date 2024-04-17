@@ -6,10 +6,7 @@ import { UserDTO } from '../../../src/users/dtos/user.dto'
 import { authenticateUser } from '../auth/auth.util'
 
 beforeEach(async () => {
-  const users: UserDTO[] = (await getAllUsers()).body
-
-  for (const user of users) await userService.deleteUser(user.id)
-
+  await prismaClient.$queryRaw`DELETE FROM "User"`
   await prismaClient.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`
 
   for (const user of usersToCreate) {
@@ -372,8 +369,6 @@ describe('Update user', () => {
 })
 
 afterAll(async () => {
-  const users: UserDTO[] = (await getAllUsers()).body
-
-  for (const user of users) await userService.deleteUser(user.id)
+  await prismaClient.$queryRaw`DELETE FROM "User"`
   await prismaClient.$disconnect()
 })

@@ -2,6 +2,7 @@ import { app } from '../../../src/app'
 import supertest from 'supertest'
 import { CreateUserDTO } from '../../../src/users/dtos/create-user.dto'
 import { getPrismaClient } from '../../../src/common/prisma/prisma.config'
+import { UserDTO } from '../../../src/users/dtos/user.dto'
 
 export const api = supertest(app)
 export const prismaClient = getPrismaClient()
@@ -25,8 +26,8 @@ export const usersToCreate: CreateUserDTO[] = [
 ]
 
 export const getAllUsers = async () => {
-  const response = await api.get('/api/users')
+  const users: UserDTO[] = await prismaClient.$queryRaw`SELECT * FROM "User"`
   return {
-    body: response.body
+    body: users
   }
 }

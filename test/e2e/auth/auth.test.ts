@@ -2,16 +2,17 @@ import { LoginDTO } from '../../../src/auth/dtos/login.dto'
 import { HTTP_STATUS } from '../../../src/common/constants/http-codes.constants'
 import { UserDTO } from '../../../src/users/dtos/user.dto'
 import { userService } from '../../../src/users/user.service'
-import { api, getAllUsers, prismaClient, usersToCreate } from '../users/users.util'
+import {
+  api,
+  deleteAllUsers,
+  getAllUsers,
+  prismaClient,
+  usersToCreate
+} from '../users/users.util'
 import * as jwt from 'jsonwebtoken'
 
 beforeAll(async () => {
-  const users: UserDTO[] = (await getAllUsers()).body
-
-  for (const user of users) await userService.deleteUser(user.id)
-
-  await prismaClient.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`
-
+  await deleteAllUsers()
   await userService.createUser(usersToCreate[0])
 })
 

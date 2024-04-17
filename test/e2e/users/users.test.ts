@@ -3,6 +3,7 @@ import { CreateUserDTO } from '../../../src/users/dtos/create-user.dto'
 import { userService } from '../../../src/users/user.service'
 import { api, usersToCreate, getAllUsers, prismaClient } from './users.util'
 import { UserDTO } from '../../../src/users/dtos/user.dto'
+import { authenticateUser } from '../auth/auth.util'
 
 beforeEach(async () => {
   const users: UserDTO[] = (await getAllUsers()).body
@@ -133,7 +134,14 @@ describe('Get all users', () => {
 describe('Get specific user', () => {
   test('Should get specific user by id', async () => {
     const userId = 1
-    const response = await api.get(`/api/users/id/${userId}`).expect(HTTP_STATUS.OK)
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
+    const response = await api
+      .get(`/api/users/id/${userId}`)
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
 
     const user = {
       id: userId,
@@ -169,7 +177,14 @@ describe('Get specific user', () => {
 
   test('Should return null if user id does not exist', async () => {
     const userId = (await getAllUsers()).body.length
-    const response = await api.get(`/api/users/id/${userId + 2}`).expect(HTTP_STATUS.OK)
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
+    const response = await api
+      .get(`/api/users/id/${userId + 2}`)
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
 
     expect(response.body).toBe(null)
   })

@@ -31,3 +31,8 @@ export const getAllUsers = async () => {
     body: users
   }
 }
+
+export const deleteAllUsers = async () => {
+  await prismaClient.$queryRaw`DELETE FROM "User"`
+  await prismaClient.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`
+}

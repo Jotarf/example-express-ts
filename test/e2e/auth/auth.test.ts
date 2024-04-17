@@ -100,6 +100,21 @@ describe('Auth User', () => {
     expect(response.body.error).toBe('"email" is not allowed to be empty')
     expect(response.headers['set-cookie']).not.toBeDefined()
   })
+
+  test('Should throw error if password is empty', async () => {
+    const loginCredentials: LoginDTO = {
+      email: 'example@email.com',
+      password: ''
+    }
+
+    const response = await api
+      .post('/api/auth')
+      .send(loginCredentials)
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toBe('"password" is not allowed to be empty')
+    expect(response.headers['set-cookie']).not.toBeDefined()
+  })
 })
 
 afterAll(async () => {

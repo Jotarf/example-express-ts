@@ -40,6 +40,21 @@ describe('Auth User', () => {
 
     expect(decodedToken).toBeDefined()
   })
+
+  test('Should not authenticate user with wrong password', async () => {
+    const loginCredentials: LoginDTO = {
+      email: usersToCreate[0].email,
+      password: 'wrongpassword'
+    }
+
+    const response = await api
+      .post('/api/auth')
+      .send(loginCredentials)
+      .expect(HTTP_STATUS.BAD_REQUEST)
+
+    expect(response.body.error).toBe('User or password incorrect')
+    expect(response.headers['set-cookie']).not.toBeDefined()
+  })
 })
 
 afterAll(async () => {

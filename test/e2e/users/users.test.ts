@@ -219,6 +219,16 @@ describe('Get specific user', () => {
 
     expect(response.body).toBe(null)
   })
+
+  test('Should throw error if jwt cookie is not sent when requesting user by email', async () => {
+    const email = 'email@email.com'
+
+    const response = await api
+      .get(`/api/users/email/${email}`)
+      .expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.body.error).toBe('Token is missing')
+  })
 })
 
 describe('Delete user', () => {

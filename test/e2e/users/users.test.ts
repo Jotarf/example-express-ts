@@ -159,7 +159,14 @@ describe('Get specific user', () => {
 
   test('Should get specific user by email', async () => {
     const userEmail = usersToCreate[0].email
-    const response = await api.get(`/api/users/email/${userEmail}`).expect(HTTP_STATUS.OK)
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
+    const response = await api
+      .get(`/api/users/email/${userEmail}`)
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
 
     const user = {
       id: 1,

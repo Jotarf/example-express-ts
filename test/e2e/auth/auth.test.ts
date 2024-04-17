@@ -117,6 +117,41 @@ describe('Auth User', () => {
   })
 })
 
+describe('Logout user', () => {
+  test('Should logout user', async () => {
+    api.post('/api/auth/logout').send({}).expect(HTTP_STATUS.BAD_REQUEST)
+
+    const loginCredentials: LoginDTO = {
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    }
+
+    const loginResponse = await api
+      .post('/api/auth')
+      .send(loginCredentials)
+      .expect(HTTP_STATUS.OK)
+
+    expect(loginResponse.headers['set-cookie']).toBeDefined()
+    const jwtCookie = loginResponse.headers['set-cookie'][0]
+      .split(';')
+      .find((cookie: string) => cookie.startsWith('jwt='))
+    const token = jwtCookie!.split('=')[1]
+
+    const logoutResponse = await api
+      .post('/api/auth/logout')
+      .set('Cookie', [`jwt=${token}`])
+      .expect(HTTP_STATUS.OK)
+
+    expect(logoutResponse.headers['set-cookie']).toBeDefined()
+
+    const jwtCookieLogout = logoutResponse.headers['set-cookie'][0]
+      .split(';')
+      .find((cookie: string) => cookie.startsWith('jwt='))
+
+    expect(jwtCookieLogout).toBe('jwt=')
+  })
+})
+
 afterAll(async () => {
   const users: UserDTO[] = (await getAllUsers()).body
 

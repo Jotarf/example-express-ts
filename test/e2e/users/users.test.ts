@@ -189,6 +189,16 @@ describe('Get specific user', () => {
     expect(response.body).toBe(null)
   })
 
+  test('Should throw error if jwt cookie is not sent when requesting user by id', async () => {
+    const userId = (await getAllUsers()).body.length
+
+    const response = await api
+      .get(`/api/users/id/${userId + 1}`)
+      .expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.body.error).toBe('Token is missing')
+  })
+
   test('Should return null if user email does not exist', async () => {
     const userEmail = 'abcd@email.com'
     const response = await api.get(`/api/users/email/${userEmail}`).expect(HTTP_STATUS.OK)

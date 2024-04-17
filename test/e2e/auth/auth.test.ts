@@ -119,7 +119,7 @@ describe('Auth User', () => {
 
 describe('Logout user', () => {
   test('Should logout user', async () => {
-    api.post('/api/auth/logout').send({}).expect(HTTP_STATUS.BAD_REQUEST)
+    api.post('/api/auth/logout').send().expect(HTTP_STATUS.BAD_REQUEST)
 
     const loginCredentials: LoginDTO = {
       email: usersToCreate[0].email,

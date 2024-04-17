@@ -150,6 +150,12 @@ describe('Logout user', () => {
 
     expect(jwtCookieLogout).toBe('jwt=')
   })
+
+  test('Should not logout user without token', async () => {
+    const response = await api.post('/api/auth/logout').expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.headers['set-cookie']).not.toBeDefined()
+  })
 })
 
 afterAll(async () => {

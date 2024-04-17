@@ -26,7 +26,13 @@ export const usersToCreate: CreateUserDTO[] = [
 ]
 
 export const getAllUsers = async () => {
-  const users: UserDTO[] = await prismaClient.$queryRaw`SELECT * FROM "User"`
+  const users: UserDTO[] = await prismaClient.user.findMany({
+    select: {
+      email: true,
+      fullname: true,
+      id: true
+    }
+  })
   return {
     body: users
   }

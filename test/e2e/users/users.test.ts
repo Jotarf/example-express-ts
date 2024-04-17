@@ -208,7 +208,14 @@ describe('Get specific user', () => {
 
   test('Should return null if user email does not exist', async () => {
     const userEmail = 'abcd@email.com'
-    const response = await api.get(`/api/users/email/${userEmail}`).expect(HTTP_STATUS.OK)
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
+    const response = await api
+      .get(`/api/users/email/${userEmail}`)
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
 
     expect(response.body).toBe(null)
   })

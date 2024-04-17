@@ -119,8 +119,6 @@ describe('Auth User', () => {
 
 describe('Logout user', () => {
   test('Should logout user', async () => {
-    api.post('/api/auth/logout').send().expect(HTTP_STATUS.BAD_REQUEST)
-
     const loginCredentials: LoginDTO = {
       email: usersToCreate[0].email,
       password: usersToCreate[0].password
@@ -132,6 +130,7 @@ describe('Logout user', () => {
       .expect(HTTP_STATUS.OK)
 
     expect(loginResponse.headers['set-cookie']).toBeDefined()
+
     const jwtCookie = loginResponse.headers['set-cookie'][0]
       .split(';')
       .find((cookie: string) => cookie.startsWith('jwt='))

@@ -15,7 +15,12 @@ userRouter.get(
   validateJWTMiddleware,
   userController.getUserById
 )
-userRouter.get('/email/:email', validateParamsMiddleware, userController.getUserByEmail)
+userRouter.get(
+  '/email/:email',
+  validateParamsMiddleware,
+  validateJWTMiddleware,
+  userController.getUserByEmail
+)
 userRouter.put(
   '/:userId',
   validateParamsMiddleware,

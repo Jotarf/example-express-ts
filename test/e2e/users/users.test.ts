@@ -1,13 +1,18 @@
 import { HTTP_STATUS } from '../../../src/common/constants/http-codes.constants'
 import { CreateUserDTO } from '../../../src/users/dtos/create-user.dto'
 import { userService } from '../../../src/users/user.service'
-import { api, usersToCreate, getAllUsers, prismaClient } from './users.util'
+import {
+  api,
+  usersToCreate,
+  getAllUsers,
+  prismaClient,
+  deleteAllUsers
+} from './users.util'
 import { UserDTO } from '../../../src/users/dtos/user.dto'
 import { authenticateUser } from '../auth/auth.util'
 
 beforeEach(async () => {
-  await prismaClient.$queryRaw`DELETE FROM "User"`
-  await prismaClient.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`
+  await deleteAllUsers()
 
   for (const user of usersToCreate) {
     await userService.createUser(user)
@@ -104,12 +109,19 @@ describe('Create user', () => {
 
 describe('Get all users', () => {
   test('Should get all users', async () => {
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
     const usersWithId = usersToCreate.map((user, index) => ({
       id: index + 1,
       fullname: user.fullname,
       email: user.email
     }))
-    const response = await api.get('/api/users').expect(HTTP_STATUS.OK)
+    const response = await api
+      .get('/api/users')
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
 
     expect(response.body).toHaveLength(usersToCreate.length)
     expect(response.body).toEqual(usersWithId)
@@ -118,13 +130,27 @@ describe('Get all users', () => {
   test('Should get empty array if there are no users', async () => {
     const usersToDelete: UserDTO[] = (await getAllUsers()).body
 
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
+
     for (const user of usersToDelete) {
       await userService.deleteUser(user.id)
     }
 
-    const response = await api.get('/api/users').expect(HTTP_STATUS.OK)
+    const response = await api
+      .get('/api/users')
+      .set('Cookie', [`jwt=${jwtToken}`])
+      .expect(HTTP_STATUS.OK)
     expect(response.body).toHaveLength(0)
     expect(response.body).toEqual([])
+  })
+
+  test('Should throw error if jwt cookie is not sent when requesting all users', async () => {
+    const response = await api.get('/api/users/').expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.body.error).toBe('Token is missing')
   })
 })
 
@@ -369,6 +395,6 @@ describe('Update user', () => {
 })
 
 afterAll(async () => {
-  await prismaClient.$queryRaw`DELETE FROM "User"`
+  await deleteAllUsers()
   await prismaClient.$disconnect()
 })

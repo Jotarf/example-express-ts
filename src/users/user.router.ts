@@ -8,7 +8,7 @@ import { validateJWTMiddleware } from '../auth/middlewares/jwt.middleware'
 export const userRouter = Router()
 
 userRouter.post('/', validateCreateUserMiddleware, userController.createUser)
-userRouter.get('/', userController.getAllUsers)
+userRouter.get('/', validateJWTMiddleware, userController.getAllUsers)
 userRouter.get(
   '/id/:userId',
   validateParamsMiddleware,

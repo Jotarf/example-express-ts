@@ -28,6 +28,16 @@ const login = async (req: Request, res: Response) => {
   return res.status(HTTP_STATUS.OK).send({ ...result.data.user })
 }
 
+const logout = async (_: Request, res: Response) => {
+  res.clearCookie('jwt', {
+    sameSite: 'strict',
+    httpOnly: true
+  })
+
+  return res.status(HTTP_STATUS.OK).send({})
+}
+
 export const authController = {
-  login
+  login,
+  logout
 }

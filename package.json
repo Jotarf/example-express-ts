@@ -1,6 +1,6 @@
 {
   "name": "example-express-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Example app using express and typescript",
   "main": "index.js",
   "scripts": {
@@ -15,12 +15,18 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "5.12.1",
+    "bcrypt": "5.1.1",
+    "cookie-parser": "1.4.6",
     "express": "4.19.2",
-    "joi": "17.12.3"
+    "joi": "17.12.3",
+    "jsonwebtoken": "9.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "5.0.2",
+    "@types/cookie-parser": "1.4.7",
     "@types/express": "4.17.21",
     "@types/jest": "29.5.12",
+    "@types/jsonwebtoken": "9.0.6",
     "@types/supertest": "6.0.2",
     "cross-env": "7.0.3",
     "jest": "29.7.0",

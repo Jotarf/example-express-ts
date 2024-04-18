@@ -6,7 +6,8 @@ import joi from 'joi'
 
 const createUserSchema: SchemaValidation<CreateUserDTO> = {
   fullname: userSchema.fullnameField,
-  email: userSchema.emailField
+  email: userSchema.emailField,
+  password: userSchema.passwordField
 }
 
 const updateUserSchema: SchemaValidation<UserDTO> = {

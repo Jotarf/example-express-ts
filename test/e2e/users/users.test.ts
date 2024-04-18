@@ -29,7 +29,10 @@ describe('Create user', () => {
 
     await api.post('/api/users').send(newUser).expect(HTTP_STATUS.CREATED)
 
-    const { password, ...userWithoutPassword } = newUser
+    const userWithoutPassword = {
+      email: newUser.email,
+      fullname: newUser.fullname
+    }
 
     const response = await getAllUsers()
     expect(response.body).toHaveLength(usersToCreate.length + 1)

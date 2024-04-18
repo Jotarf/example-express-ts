@@ -316,11 +316,18 @@ describe('Update user', () => {
       fullname: users[0].fullname,
       email: users[0].email
     }
+
     userToUpdate.email = 'updated@email.com'
+
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
 
     const response = await api
       .put(`/api/users/${userToUpdate.id}`)
       .send(userToUpdate)
+      .set('Cookie', [`jwt=${jwtToken}`])
       .expect(HTTP_STATUS.OK)
 
     const usersAfterUpdate: UserDTO[] = (await getAllUsers()).body
@@ -343,9 +350,15 @@ describe('Update user', () => {
 
     userToUpdate.fullname = 'Updated Name'
 
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
+
     const response = await api
       .put(`/api/users/${userToUpdate.id}`)
       .send(userToUpdate)
+      .set('Cookie', [`jwt=${jwtToken}`])
       .expect(HTTP_STATUS.OK)
 
     const usersAfterUpdate: UserDTO[] = (await getAllUsers()).body
@@ -407,13 +420,34 @@ describe('Update user', () => {
     const users: UserDTO[] = (await getAllUsers()).body
     const userToUpdate: UserDTO = structuredClone(users[0])
     const nonExistentUserId = users.length + 2
+    const jwtToken = await authenticateUser({
+      email: usersToCreate[0].email,
+      password: usersToCreate[0].password
+    })
 
     const response = await api
       .put(`/api/users/${nonExistentUserId}`)
       .send(userToUpdate)
+      .set('Cookie', [`jwt=${jwtToken}`])
       .expect(HTTP_STATUS.BAD_REQUEST)
 
     expect(response.body.error).toBe('Record to update not found.')
+  })
+
+  test('Should throw error if jwt cookie is not sent when updating user', async () => {
+    const users: UserDTO[] = (await getAllUsers()).body
+    const userToUpdate: UserDTO = {
+      id: users[0].id,
+      fullname: users[0].fullname,
+      email: users[0].email
+    }
+
+    const response = await api
+      .put(`/api/users/${userToUpdate.id}`)
+      .send(userToUpdate)
+      .expect(HTTP_STATUS.UNAUTHORIZED)
+
+    expect(response.body.error).toBe('Token is missing')
   })
 })
 

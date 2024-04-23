@@ -21,7 +21,8 @@
     "cookie-parser": "1.4.6",
     "express": "4.19.2",
     "joi": "17.12.3",
-    "jsonwebtoken": "9.0.2"
+    "jsonwebtoken": "9.0.2",
+    "swagger-ui-express": "5.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.2",

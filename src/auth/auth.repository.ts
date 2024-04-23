@@ -28,7 +28,11 @@ const login = async (
       expiresIn: '30s'
     })
 
-    const { password, ...userWithoutPassword } = user
+    const userWithoutPassword = {
+      id: user.id,
+      email: user.email,
+      fullname: user.fullname
+    }
 
     const result: RepositoryResultDTO<{ user: UserDTO; token: string }> = {
       data: { user: userWithoutPassword, token },

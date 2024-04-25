@@ -1,6 +1,6 @@
 {
   "name": "example-express-ts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Example app using express and typescript",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,8 @@
     "cookie-parser": "1.4.6",
     "express": "4.19.2",
     "joi": "17.12.3",
-    "jsonwebtoken": "9.0.2"
+    "jsonwebtoken": "9.0.2",
+    "swagger-ui-express": "5.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.2",
@@ -30,6 +31,7 @@
     "@types/jest": "29.5.12",
     "@types/jsonwebtoken": "9.0.6",
     "@types/supertest": "6.0.2",
+    "@types/swagger-ui-express": "4.1.6",
     "@typescript-eslint/eslint-plugin": "7.7.0",
     "@typescript-eslint/parser": "7.7.0",
     "cross-env": "7.0.3",

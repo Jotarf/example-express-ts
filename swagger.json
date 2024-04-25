@@ -1,0 +1,582 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Users API",
+    "description": "API to manage users in a system",
+    "version": "1.0.4"
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Operations related to user authentication"
+    },
+    {
+      "name": "Users",
+      "description": "Operations related to user management"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fullname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "fullname", "email"]
+      },
+      "CreateUser": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["fullname", "email", "password"]
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "password"]
+      }
+    }
+  },
+  "paths": {
+    "/api/auth": {
+      "post": {
+        "summary": "Logs in a user and returns a JWT token",
+        "description": "This endpoint accepts user email and password and returns a JWT token upon successful login. The token in 'jwt' cookie can be used for authorization in subsequent requests.",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/Login"
+              },
+              "examples": {
+                "Success Login Example": {
+                  "value": {
+                    "email": "john.doe@example.com",
+                    "password": "password123456"
+                  }
+                },
+                "Error Login Example": {
+                  "value": {
+                    "email": "error@example.com",
+                    "password": "password123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful authentication",
+            "headers": {
+              "Set-Cookie": {
+                "name": "jwt",
+                "type": "string",
+                "description": "Contains the JWT token in the 'jwt' cookie"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "1",
+                  "fullname": "John Doe",
+                  "email": "john.doe@example.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user could not be authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "error": "User or password incorrect"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Logs out the user",
+        "description": "This endpoint requires the auth cookie with the name 'jwt' that contains the token needed to log out the user.",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Successful log out",
+            "headers": {
+              "Set-Cookie": {
+                "name": "jwt",
+                "type": "string",
+                "description": "Deletes user cookie with jwt token"
+              }
+            }
+          },
+          "400": {
+            "description": "The user could not be logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "expired token": {
+                    "value": { "error": "Token is invalid" }
+                  },
+                  "missing token": {
+                    "value": { "error": "Token is missing" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "post": {
+        "summary": "Creates a new user",
+        "description": "This endpoint accepts fullname, email and password for creating a user",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/CreateUser"
+              },
+              "examples": {
+                "Create User Example": {
+                  "value": {
+                    "fullname": "John Doe",
+                    "email": "john.doe@example.com",
+                    "password": "password123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful user creation"
+          },
+          "400": {
+            "description": "The user could not be created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "invalid email": {
+                    "value": { "error": "\"email\" must be a valid email" }
+                  },
+                  "empty fullname": {
+                    "value": { "error": "\"fullname\" is not allowed to be empty" }
+                  },
+                  "empty password": {
+                    "value": { "error": "\"password\" is not allowed to be empty" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all users",
+        "description": "Retrieves a list of all users in the system",
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "description": "Returns an array of all the users in the system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "1",
+                    "fullname": "John Doe",
+                    "email": "john.doe@example.com"
+                  },
+                  {
+                    "id": "2",
+                    "fullname": "Jane Smith",
+                    "email": "jane.smith@example.com"
+                  },
+                  {
+                    "id": "3",
+                    "fullname": "Matt Murdock",
+                    "email": "matt.murdock@example.com"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "expired token": {
+                    "value": { "error": "Token has expired" }
+                  },
+                  "token not found": {
+                    "value": { "error": "Token is missing" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/id/{id}": {
+      "get": {
+        "summary": "Get specific user by id",
+        "description": "Returns the specified user by ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested user by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "user found": {
+                    "value": {
+                      "id": "1",
+                      "fullname": "John Doe",
+                      "email": "john.doe@example.com"
+                    }
+                  },
+                  "user not found": {
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "expired token": {
+                    "value": { "error": "Token has expired" }
+                  },
+                  "token not found": {
+                    "value": { "error": "Token is missing" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user could not be retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "invalid user id": {
+                    "value": { "error": "\"userId\" must be a number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/email/{email}": {
+      "get": {
+        "summary": "Get specific user by email",
+        "description": "Returns the specified user by email",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "Email of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested user by email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "user found": {
+                    "value": {
+                      "id": "1",
+                      "fullname": "John Doe",
+                      "email": "john.doe@example.com"
+                    }
+                  },
+                  "user not found": {
+                    "value": null
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "expired token": {
+                    "value": { "error": "Token has expired" }
+                  },
+                  "token not found": {
+                    "value": { "error": "Token is missing" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user could not be retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "invalid user email": {
+                    "value": { "error": "\"email\" must be a valid email" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "put": {
+        "summary": "Updates an existing user",
+        "description": "This endpoint accepts fullname and email for updating user",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "Update User Example": {
+                  "value": {
+                    "id": 2,
+                    "fullname": "John Doe",
+                    "email": "john.doe@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful user updated"
+          },
+          "400": {
+            "description": "The user could not be updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "invalid id": {
+                    "value": { "error": "\"userId\" must be a number" }
+                  },
+                  "empty fullname": {
+                    "value": { "error": "\"fullname\" is not allowed to be empty" }
+                  },
+                  "empty email": {
+                    "value": { "error": "\"email\" is not allowed to be empty" }
+                  },
+                  "invalid email": {
+                    "value": { "error": "\"email\" must be a valid email" }
+                  },
+                  "user not found": {
+                    "value": { "error": "Record to update not found." }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "expired token": {
+                    "value": { "error": "Token has expired" }
+                  },
+                  "token not found": {
+                    "value": { "error": "Token is missing" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a specific user",
+        "description": "Delete the user based on the ID provided",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "401": {
+            "description": "The user is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "expired token": {
+                    "value": { "error": "Token has expired" }
+                  },
+                  "token not found": {
+                    "value": { "error": "Token is missing" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The ID provided was not valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "invalid user id": {
+                    "value": { "error": "\"userId\" must be a number" }
+                  },
+                  "user not found": {
+                    "value": { "error": "Record to delete does not exist." }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

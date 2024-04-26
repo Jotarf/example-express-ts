@@ -25,7 +25,7 @@ const login = async (
 
     const payload = { id: user.id, email: user.email }
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: '30s'
+      expiresIn: '7d'
     })
 
     const userWithoutPassword = {

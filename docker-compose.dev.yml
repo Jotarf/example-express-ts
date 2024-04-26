@@ -19,11 +19,14 @@ services:
       - ./.env
     build:
       context: .
-      target: production
-    image: express:prod
+      target: development
+    image: express:dev
     ports:
       - 3000:3000
     environment:
       DATABASE_URL: ${DATABASE_URL_DOCKER}
+    volumes:
+      - .:/app
+      - /app/node_modules
 volumes:
   express-example-db:

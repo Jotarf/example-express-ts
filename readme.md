@@ -16,6 +16,15 @@ API for handling users CRUD operations and authentication, developed with the fo
 - NPM
 - Eslint
 
+## Required Technologies
+
+- [NodeJS](https://nodejs.org/) => 18.16.0
+- [PostgreSQL](https://www.postgresql.org/) or [Docker](https://www.docker.com/)
+
+## Database Configuration
+
+You can create a database using PostgreSQL or Docker (you can run "npm run compose:db" to setup the database), after database creation you must configure ".env" file with the database credentials
+
 ## Execution Steps
 
 1. Clone the repository
@@ -51,5 +60,7 @@ API for handling users CRUD operations and authentication, developed with the fo
   > npm run compose:prod
 - Run development docker container
   > npm run compose:dev
+- Run only database
+  > npm run compose:db
 - Run linter (eslint)
   > npm run lint
